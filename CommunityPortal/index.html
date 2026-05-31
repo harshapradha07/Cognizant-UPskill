@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local Community Event Portal</title>
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        margin:20px;
+    }
+    #welcomeBanner{
+        background-color:blue;
+        color:black;
+        padding:15px;
+        text-align:center;
+        border-radius:8px;
+    }
+    .highlight{
+        background-color: green;
+        font-weight:bold;
+    }
+    nav{
+        background:#333;
+        padding:10px;
+        margin:10px 0;
+    }
+    nav a{
+        color:black;
+        text-decoration:none;
+        margin-right:20px;
+    }
+    .gallery-img{
+        width:180px;
+        height:120px;
+        border:3px solid black;
+        cursor:pointer;
+        transition:0.3s;
+    }
+    table{
+        border-collapse: collapse;
+    }
+    td{
+        padding:10px;
+    }
+    form{
+        width:60%;
+        padding:20px;
+        border:1px solid #ccc;
+        border-radius:10px;
+        background:#f4f4f4;
+    }
+    input, select, textarea{
+        width:100%;
+        padding:8px;
+        margin-bottom:10px;
+    }
+    button{
+        padding:10px;
+        margin-top:10px;
+    }
+</style>
+<script>
+let formChanged = false;
+function validatePhone(){
+    let phone = document.getElementById("phone").value;
+    if(!/^[0-9]{10}$/.test(phone)){
+        alert("Enter valid 10-digit phone number");
+    }
+}
+function showFee(){
+    let event = document.getElementById("eventType").value;
+    let fee = "";
+    if(event=="Sports")
+        fee="₹100";
+    else if(event=="Music")
+        fee="₹200";
+    else if(event=="Workshop")
+        fee="₹150";
+    else
+        fee="Free";
+    document.getElementById("feeDisplay").innerHTML =
+    "Event Fee: " + fee;
+    localStorage.setItem("preferredEvent", event);
+}
+function submitForm(){
+    document.getElementById("confirmOutput").value =
+    "Registration Submitted Successfully!";
+}
+function enlargeImage(img){
+    if(img.style.width=="300px"){
+        img.style.width="180px";
+        img.style.height="120px";
+    }
+    else{
+        img.style.width="300px";
+        img.style.height="200px";
+    }
+}
+function countChars(){
+    let count =
+    document.getElementById("feedback").value.length;
+
+    document.getElementById("charCount").innerHTML =
+    "Characters: " + count;
+}
+function videoReady(){
+    document.getElementById("videoMsg").innerHTML =
+    "Video ready to play";
+}
+window.onload = function(){
+    let savedEvent =
+    localStorage.getItem("preferredEvent");
+    if(savedEvent){
+        document.getElementById("eventType").value =
+        savedEvent;
+        showFee();
+    }
+}
+function clearPreferences(){
+    localStorage.clear();
+    sessionStorage.clear();
+    alert("Preferences Cleared");
+}
+function findLocation(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+            function(position){
+                document.getElementById("location").innerHTML=
+                "Latitude: " +
+                position.coords.latitude +
+                "<br>Longitude: " +
+                position.coords.longitude;
+            },
+            function(error){
+                switch(error.code){
+                    case error.PERMISSION_DENIED:
+                        alert("Permission Denied");
+                        break;
+                    case error.TIMEOUT:
+                        alert("Request Timed Out");
+                        break;
+                    default:
+                        alert("Location Error");
+                }
+            },
+            {
+                enableHighAccuracy:true,
+                timeout:5000
+            }
+        );
+    }
+}
+window.onbeforeunload = function(){
+    if(formChanged){
+        return "Form is not completed. Leave page?";
+    }
+}
+function markChanged(){
+    formChanged=true;
+}
+</script>
+</head> 
+<head>
+    <title>Community Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+</nav>
+<nav>
+    <a href="#home">Home</a>
+    <a href="#events">Events</a>
+    <a href="#contact">Contact</a>
+    <a href="help.html" target="_blank">Help</a>
+</nav>
+<div id="welcomeBanner">
+    Welcome User!
+    <span style="color:black; font-weight:bold;">
+        Special Offer: Free Registration Today!
+    </span>
+</div>
+
+<br>
+<section id="home">
+    <h2 class="highlight">Home</h2>
+    <p>Welcome to the Local Community Event Portal.</p>
+</section>
+<section id="events">
+    <h2 class="highlight">Community Events Gallery</h2>
+    <table border="1">
+        <tr>
+            <td>
+                <img src="sports.jpg"
+                alt="Event1"
+                title="Sports Event"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Sports Event
+            </td>
+            <td>
+                <img src="music.jpg"
+                alt="Event2"
+                title="Music Event"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Music Event
+            </td>
+            <td>
+                <img src="workshop.jpg"
+                alt="Event3"
+                title="Workshop"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Workshop
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="festival.jpg"
+                alt="Event4"
+                title="Festival"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Festival
+            </td>
+            <td>
+                <img src="ap.jpg"
+                alt="Event5"
+                title="Awareness Program"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Awareness Program
+            </td>
+            <td>
+                <img src="meet.jpg"
+                alt="Event6"
+                title="Community Meet"
+                class="gallery-img"
+                ondblclick="enlargeImage(this)">
+                <br>Community Meet
+            </td>
+        </tr>
+    </table>
+</section>
+<hr>
+<h2>Event Registration Form</h2>
+<form class="card p-4 shadow"
+      oninput="markChanged()">
+    Name:
+   <input type="text"
+       class="form-control"
+       placeholder="Enter Name"
+       required
+       autofocus>
+    Email:
+    <input type="email"
+       class="form-control"
+       placeholder="Enter Email"
+       required>
+    Phone:
+    <input type="text"
+       class="form-control"
+       id="phone"
+       onblur="validatePhone()">
+    Date:
+   <input type="date"
+       class="form-control"
+       required>
+    Event Type:
+    <select id="eventType"
+        class="form-select"
+        onchange="showFee()">
+        <option value="">Select</option>
+        <option value="Sports">Sports</option>
+        <option value="Music">Music</option>
+        <option value="Workshop">Workshop</option>
+    </select>
+    <p id="feeDisplay"></p>
+    Message:
+   <textarea rows="4"
+          class="form-control"></textarea>
+    Feedback:
+  <textarea id="feedback"
+          class="form-control"
+          onkeyup="countChars()"></textarea>
+
+    <p id="charCount">Characters: 0</p>
+    <button type="button"
+        class="btn btn-primary"
+        onclick="submitForm()">
+    </button>
+    <br><br>
+    <output id="confirmOutput"></output>
+</form>
+<hr>
+<h2>Event Promo Video</h2>
+<video width="500" controls>
+    <source src="face_output.mp4" type="video/mp4">
+    Your browser does not support video.
+</video>
+<p id="videoMsg"></p>
+<hr>
+<h2>Geolocation</h2>
+<button onclick="findLocation()">
+    Find Nearby Events
+</button>
+<p id="location"></p>
+<hr>
+<button onclick="clearPreferences()">
+    Clear Preferences
+</button>
+<section id="contact">
+    <h2 class="highlight">Contact</h2>
+    <p>Email: support@communityportal.com</p>
+</section>
+<section>
+    <h2>Community News</h2>
+
+    <div class="newsArticle">
+        The city council announced several new community events.
+        Residents are encouraged to participate in cultural,
+        educational, and sports activities. These programs help
+        strengthen community engagement and improve social
+        interaction among citizens. Additional workshops and
+        awareness campaigns will be conducted throughout the year.
+    </div>
+</section>
+<footer>
+    <hr>
+    <p>&copy; 2026 Local Community Event Portal</p>
+</footer>
+<script src="main.js"></script>
+<div id="loading"></div>
+
+<input type="text" id="searchBox" placeholder="Search Events">
+
+<select id="categoryFilter">
+    <option>Music</option>
+    <option>Workshop</option>
+    <option>Sports</option>
+</select>
+
+<div id="eventContainer"></div>
+
+<form name="registrationForm" onsubmit="submitRegistration(event)">
+    <input type="text" name="username" placeholder="Name">
+    <input type="email" name="email" placeholder="Email">
+    <button id="registerBtn">Register</button>
+</form>
+
+<p id="errorMsg"></p>
+<p id="successMsg"></p>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
