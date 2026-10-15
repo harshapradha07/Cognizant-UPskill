@@ -5,7 +5,7 @@ CREATE TABLE Users (
     city VARCHAR(100) NOT NULL,
     registration_date DATE NOT NULL
 );
-
+/*this was used to crete  table based on events*/
 CREATE TABLE Events (
     event_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
